@@ -18,19 +18,20 @@ services:
       context: .
       dockerfile: backend/Dockerfile
     ports:
-      - "8000:8000"
+      - "7860:7860"
     environment:
       - PYTHONUNBUFFERED=1
       - JAX_PLATFORMS=cpu
       - CUDA_VISIBLE_DEVICES=
+      - HF_WEIGHTS_REPO=${HF_WEIGHTS_REPO:-}
       - WEIGHTS_BASE_URL=${WEIGHTS_BASE_URL:-}
     volumes:
       # Mount local weights so you don't re-download every build
-      - ./ml:/app/../ml:ro
-      - ./backend/weights:/app/weights:ro
+      - ./ml:/opt/app/ml:ro
+      - ./backend/weights:/opt/app/backend/weights:ro
     restart: unless-stopped
     healthcheck:
-      test: ["CMD", "python", "-c", "import httpx; r=httpx.get('http://localhost:8000/api/v1/health'); r.raise_for_status()"]
+      test: ["CMD", "python", "-c", "import httpx; r=httpx.get('http://localhost:7860/api/v1/health'); r.raise_for_status()"]
       interval: 30s
       timeout: 10s
       retries: 3
@@ -44,7 +45,7 @@ services:
     ports:
       - "3000:3000"
     environment:
-      - NEXT_PUBLIC_API_URL=http://backend:8000
+      - NEXT_PUBLIC_API_URL=http://backend:7860
     depends_on:
       backend:
         condition: service_healthy

@@ -14,10 +14,8 @@ frontend/out
 
 # Docs & config not needed at runtime
 docs/
-*.md
 LICENSE
 Makefile
-render.yaml
 docker-compose.yml
 .env
 .env.*

@@ -141,9 +141,10 @@ def load_models():
 async def lifespan(app: FastAPI):
     """Load models on startup, clean up on shutdown."""
     load_models()
+    port = os.environ.get("PORT", "7860")
     logger.info("=" * 50)
     logger.info("  Model server ready — all 4 engines.")
-    logger.info("  Docs: http://localhost:8000/docs")
+    logger.info(f"  Docs: http://localhost:{port}/docs")
     logger.info("=" * 50)
     yield
     logger.info("Shutting down server...")
@@ -1004,10 +1005,11 @@ def _analyze_video(video_bytes: bytes, filename: str) -> dict:
 
 if __name__ == "__main__":
     import uvicorn
+    port = int(os.environ.get("PORT", 7860))  # HF Spaces uses 7860
     uvicorn.run(
         "server_lite:app",
         host="0.0.0.0",
-        port=8000,
+        port=port,
         reload=False,
         log_level="info",
     )

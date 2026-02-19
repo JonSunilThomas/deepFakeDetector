@@ -1,6 +1,7 @@
-# ── Render Deployment Dependencies ────────────────────────────
+# ── Deployment Dependencies ───────────────────────────────────
 # Slim version: only what server_lite.py actually needs.
 # No Postgres, Redis, Web3, or DeepFace (heavy TF dependency).
+# Used by: Hugging Face Spaces, Docker, Render, etc.
 
 # Server
 fastapi==0.115.6
@@ -24,3 +25,4 @@ soundfile==0.12.1
 
 # Utilities
 python-dotenv==1.0.1
+huggingface_hub>=0.20.0
