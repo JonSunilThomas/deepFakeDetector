@@ -1,0 +1,29 @@
+# ── Render Blueprint ──────────────────────────────────────────
+# Auto-deploys from GitHub. Push to main → Render rebuilds.
+# Docs: https://docs.render.com/blueprint-spec
+# ──────────────────────────────────────────────────────────────
+
+services:
+  # ── Backend: FastAPI + ML Models ────────────────────────────
+  - type: web
+    name: deepfake-backend
+    runtime: docker
+    dockerfilePath: ./backend/Dockerfile
+    dockerContext: .          # Repo root — backend needs access to ml/ weights
+    region: oregon
+    plan: standard            # Minimum for ML — needs ≥2 GB RAM
+    branch: main
+    healthCheckPath: /api/v1/health
+    envVars:
+      - key: PYTHONUNBUFFERED
+        value: "1"
+      - key: JAX_PLATFORMS
+        value: cpu
+      - key: CUDA_VISIBLE_DEVICES
+        value: ""
+      - key: WEIGHTS_BASE_URL
+        sync: false       # Set manually in Render dashboard
+    disk:
+      name: ml-weights
+      mountPath: /app/weights-cache
+      sizeGB: 1

@@ -1,0 +1,51 @@
+# ══════════════════════════════════════════════════════════════
+#  DeepFake Detector — Docker Compose (Local Dev)
+# ══════════════════════════════════════════════════════════════
+# Usage:
+#   docker compose up --build         # Build & start everything
+#   docker compose up --build backend # Backend only
+#
+# The frontend is typically deployed to Vercel, but this lets
+# you test the full stack locally.
+# ──────────────────────────────────────────────────────────────
+
+version: "3.9"
+
+services:
+  # ── FastAPI Backend + ML Models ─────────────────────────────
+  backend:
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+    ports:
+      - "8000:8000"
+    environment:
+      - PYTHONUNBUFFERED=1
+      - JAX_PLATFORMS=cpu
+      - CUDA_VISIBLE_DEVICES=
+      - WEIGHTS_BASE_URL=${WEIGHTS_BASE_URL:-}
+    volumes:
+      # Mount local weights so you don't re-download every build
+      - ./ml:/app/../ml:ro
+      - ./backend/weights:/app/weights:ro
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "python", "-c", "import httpx; r=httpx.get('http://localhost:8000/api/v1/health'); r.raise_for_status()"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s   # Models take time to load
+
+  # ── Next.js Frontend (optional — use Vercel in prod) ───────
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    environment:
+      - NEXT_PUBLIC_API_URL=http://backend:8000
+    depends_on:
+      backend:
+        condition: service_healthy
+    restart: unless-stopped

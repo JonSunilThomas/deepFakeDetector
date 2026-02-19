@@ -1,0 +1,26 @@
+# ── Render Deployment Dependencies ────────────────────────────
+# Slim version: only what server_lite.py actually needs.
+# No Postgres, Redis, Web3, or DeepFace (heavy TF dependency).
+
+# Server
+fastapi==0.115.6
+uvicorn[standard]==0.34.0
+websockets==14.1
+pydantic==2.10.4
+python-multipart==0.0.20
+
+# ML / Computer Vision
+torch>=2.1.0
+torchvision>=0.16.0
+opencv-python-headless==4.10.0.84
+mediapipe==0.10.20
+numpy>=1.24.0
+scipy>=1.11.0
+Pillow>=10.0.0
+
+# Audio
+librosa==0.10.2
+soundfile==0.12.1
+
+# Utilities
+python-dotenv==1.0.1

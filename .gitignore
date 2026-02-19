@@ -1,0 +1,51 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+dist/
+build/
+.venv/
+venv/
+*.egg
+
+# Node
+node_modules/
+.next/
+out/
+
+# Hardhat
+artifacts/
+cache/
+typechain-types/
+
+# Environment
+.env
+.env.local
+
+# IDE
+.vscode/
+.idea/
+
+# Weights / Models
+*.pth
+*.h5
+*.onnx
+*.pkl
+ml/*/weights/*.pth
+ml/*/weights/*.h5
+
+# Data
+ml/*/data/
+ml/datasets/lfw/
+ml/datasets/celebdf/
+ml/datasets/fake_or_real/
+ml/datasets/fer2013/
+ml/datasets/manifest.json
+datasets/
+
+# Docker
+*.log
+
+# OS
+.DS_Store
+Thumbs.db
